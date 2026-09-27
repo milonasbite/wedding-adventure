@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171717" />
+  <title>Alex & Antonia — Wedding Adventure</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="menu-open">
+  <main class="app-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Alex & Antonia</p>
+        <h1>Wedding Adventure</h1>
+        <p class="subtitle">Four levels of running, jumping, rings, hearts, traps and Frankenstein-style monsters. The bride is waiting in a cage at the end of Level 4. Highest score wins.</p>
+      </div>
+      <button id="leaderboard-toggle" class="secondary-btn" type="button">Leaderboard</button>
+    </section>
+
+    <section class="game-card">
+      <div id="game-wrap" class="game-wrap menu-mode" aria-label="Wedding platform game">
+        <div id="game"></div>
+
+        <div id="start-overlay" class="overlay visible">
+          <div class="overlay-card">
+            <div class="badge">💍 Wedding Challenge</div>
+            <h2>Ready to play?</h2>
+            <label for="player-name">Player name</label>
+            <input id="player-name" maxlength="20" autocomplete="nickname" value="Aimilia" />
+            <button id="start-game" class="primary-btn" type="button">Start game</button>
+            <p id="start-message" class="message" role="status"></p>
+            <p>Rotate your phone to landscape if you can. Push the joystick up for a single jump. Use JUMP ×2 and tap it again while airborne for a double jump. Collect hearts to survive hits and falls. If your heart count is 0, the next hit or fall ends the run. Watch out for the Frankenstein-style monsters, mischievous cats, and seagulls patrolling the upper lanes. You also get <strong>1 flamethrower burst</strong> at a time, and a fuel pickup can refill it once. There are <strong>4 levels</strong>. Find the <strong>key in Level 4</strong> before you reach the bride's cage.</p>
+          </div>
+        </div>
+
+        <div id="end-overlay" class="overlay">
+          <div class="overlay-card">
+            <div id="end-badge" class="badge">🔓 You rescued the bride!</div>
+            <h2 id="end-title">Great run!</h2>
+            <div id="score-breakdown" class="score-breakdown"></div>
+            <button id="show-leaderboard" class="secondary-btn full" type="button">See leaderboard</button>
+            <p id="submit-message" class="message" role="status"></p>
+            <button id="play-again" class="primary-btn" type="button">Play again</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-strip" aria-live="polite" hidden>
+        <span>Level <strong id="hud-level">1/4</strong></span>
+        <span>Score <strong id="hud-score">0</strong></span>
+        <span>💍 <strong id="hud-rings">0</strong></span>
+        <span>❤️ <strong id="hud-hearts">0</strong></span>
+        <span>🔥 <strong id="hud-fire">1</strong></span>
+        <span>🦸 SUPER <strong id="hud-super">—</strong></span>
+        <span>Time <strong id="hud-time">0.0</strong>s</span>
+        <button id="music-toggle" class="music-toggle" type="button" aria-label="Mute game music" title="Mute game music">♫</button>
+      </div>
+
+      <div id="touch-controls" class="touch-controls" aria-label="Game controls" hidden>
+        <div class="move-controls">
+          <div class="joystick-shell" aria-label="Movement joystick; push up for a single jump, or steer vertically while flying">
+            <div id="joystick-base" class="joystick-base">
+              <div class="joystick-ring"></div>
+              <div id="joystick-knob" class="joystick-knob"></div>
+            </div>
+          </div>
+        </div>
+        <div class="action-controls">
+          <button id="fire-btn" class="control-btn fire" type="button" aria-label="Fire flamethrower; one use at a time">🔥 FIRE</button>
+          <button id="jump-btn" class="control-btn jump" type="button" aria-label="Jump; tap again in the air for double jump">JUMP ×2</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="leaderboard-panel" class="leaderboard-panel" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Live scores</p>
+          <h2>Leaderboard</h2>
+        </div>
+        <button id="refresh-leaderboard" class="secondary-btn" type="button">Refresh</button>
+      </div>
+      <ol id="leaderboard-list" class="leaderboard-list"></ol>
+      <p id="leaderboard-message" class="message" role="status"></p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
