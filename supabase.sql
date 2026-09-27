@@ -47,6 +47,11 @@ create index if not exists wedding_scores_score_idx
 
 alter table public.wedding_scores enable row level security;
 
+-- Modern Supabase projects no longer expose new tables to Data API roles by default.
+-- Grant only the permission the public leaderboard needs: read access for anonymous guests.
+revoke all on table public.wedding_scores from anon, authenticated;
+grant select on table public.wedding_scores to anon;
+
 drop policy if exists "Public can read wedding leaderboard" on public.wedding_scores;
 create policy "Public can read wedding leaderboard"
 on public.wedding_scores
