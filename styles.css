@@ -1,0 +1,618 @@
+:root {
+  --bg: #f7f3ef;
+  --panel: #ffffff;
+  --ink: #211f1d;
+  --muted: #746f69;
+  --border: #ded7d0;
+  --accent: #7a2d48;
+  --accent-2: #f4e7ec;
+  --shadow: 0 14px 40px rgba(30, 23, 20, 0.12);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+body { overscroll-behavior: none; }
+button, input { font: inherit; }
+button { touch-action: manipulation; }
+
+.app-shell { width: min(1100px, calc(100% - 24px)); margin: 0 auto; padding: 24px 0 48px; }
+.hero { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 16px; }
+.hero h1, .section-heading h2 { margin: 0; }
+.eyebrow { margin: 0 0 5px; color: var(--accent); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; font-size: .78rem; }
+.subtitle { margin: 6px 0 0; color: var(--muted); }
+
+.game-card, .leaderboard-panel { background: var(--panel); border: 1px solid var(--border); border-radius: 22px; box-shadow: var(--shadow); overflow: hidden; }
+.game-wrap { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #cde9ff; overflow: hidden; }
+#game { width: 100%; height: 100%; display: grid; place-items: center; overflow: hidden; }
+#game canvas { display: block; max-width: 100%; max-height: 100%; }
+
+.overlay { position: absolute; inset: 0; display: none; place-items: center; padding: 18px; background: rgba(18, 18, 18, .55); backdrop-filter: blur(4px); z-index: 20; }
+.overlay.visible { display: grid; }
+.overlay-card { width: min(430px, 100%); background: rgba(255,255,255,.97); border-radius: 20px; padding: 22px; box-shadow: var(--shadow); }
+.overlay-card h2 { margin: 8px 0 8px; font-size: clamp(1.5rem, 4vw, 2.1rem); }
+.overlay-card p { color: var(--muted); line-height: 1.45; }
+.badge { display: inline-block; padding: 7px 10px; border-radius: 999px; background: var(--accent-2); color: var(--accent); font-weight: 800; font-size: .82rem; }
+label { display: block; margin: 16px 0 7px; font-weight: 700; }
+input { width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 13px 14px; font-size: 16px; outline: none; background: white; }
+input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(122,45,72,.12); }
+
+.primary-btn, .secondary-btn { border-radius: 12px; min-height: 44px; padding: 10px 16px; font-weight: 800; cursor: pointer; }
+.primary-btn { width: 100%; margin-top: 12px; border: 0; background: var(--accent); color: white; }
+.secondary-btn { border: 1px solid var(--border); background: white; color: var(--ink); }
+.secondary-btn.full { width: 100%; margin-top: 9px; }
+
+.hud-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; padding: 10px 14px; border-top: 1px solid var(--border); font-size: .92rem; }
+.hud-strip span { text-align: center; }
+.music-toggle {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: white;
+  color: var(--accent);
+  font-weight: 900;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.music-toggle.muted { opacity: .55; }
+
+.touch-controls { display: flex; justify-content: space-between; gap: 18px; padding: 12px 14px 16px; background: #fbfaf8; border-top: 1px solid var(--border); user-select: none; -webkit-user-select: none; }
+.move-controls, .action-controls { display: flex; gap: 10px; }
+.move-controls { align-items: center; }
+.joystick-shell { display: grid; place-items: center; min-width: 132px; min-height: 132px; }
+.joystick-base {
+  position: relative;
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.95), rgba(235,230,224,.96));
+  border: 1px solid #cec5bd;
+  box-shadow: inset 0 6px 14px rgba(255,255,255,.75), inset 0 -8px 14px rgba(150,140,130,.12), 0 4px 0 #d5cec8;
+  touch-action: none;
+}
+.joystick-ring {
+  position: absolute;
+  inset: 15px;
+  border-radius: 50%;
+  border: 2px dashed rgba(122,45,72,.18);
+}
+.joystick-knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 48px;
+  height: 48px;
+  margin-left: -24px;
+  margin-top: -24px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffffff 0%, #efe7e1 100%);
+  border: 1px solid #c9beb6;
+  box-shadow: 0 5px 10px rgba(0,0,0,.12);
+  transition: transform .03s linear;
+}
+.control-btn { min-width: 74px; min-height: 58px; border: 1px solid #cec5bd; border-radius: 16px; background: white; color: var(--ink); font-size: 1.3rem; font-weight: 900; box-shadow: 0 4px 0 #d5cec8; }
+.control-btn:active, .control-btn.pressed { transform: translateY(3px); box-shadow: 0 1px 0 #d5cec8; background: var(--accent-2); }
+.control-btn.jump { min-width: 110px; color: var(--accent); }
+.control-btn.fire { min-width: 104px; color: #a34323; background: #fff7ed; border-color: #e8c6ab; }
+
+.leaderboard-panel { margin-top: 18px; padding: 20px; }
+.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.leaderboard-list { margin: 18px 0 0; padding: 0; list-style: none; }
+.leaderboard-list li { display: grid; grid-template-columns: 42px 1fr auto; gap: 10px; align-items: center; padding: 11px 4px; border-bottom: 1px solid var(--border); }
+.rank { font-weight: 900; color: var(--accent); }
+.player { min-width: 0; font-weight: 750; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.points { font-variant-numeric: tabular-nums; font-weight: 900; }
+.message { min-height: 1.3em; margin-bottom: 0; font-size: .9rem; color: var(--muted); }
+.score-breakdown { display: grid; gap: 7px; margin: 14px 0; }
+.score-row { display: flex; justify-content: space-between; gap: 20px; }
+.score-total { border-top: 1px solid var(--border); padding-top: 9px; font-size: 1.15rem; font-weight: 900; }
+
+@media (max-width: 680px) {
+  .app-shell { width: 100%; padding: 0 0 28px; }
+  .hero { padding: 14px 14px 8px; align-items: center; }
+  .hero .subtitle { display: none; }
+  .game-card { border-left: 0; border-right: 0; border-radius: 0; }
+  .leaderboard-panel { margin: 14px; }
+  .hud-strip { font-size: .8rem; }
+  .control-btn { min-width: 62px; min-height: 56px; }
+  .control-btn.jump, .control-btn.fire { min-width: 92px; font-size: 1rem; }
+  .touch-controls { gap: 10px; }
+  .move-controls, .action-controls { gap: 7px; }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .app-shell { padding-top: 0; width: 100%; }
+  .hero { display: none; }
+  .game-card { border-radius: 0; border: 0; }
+  .game-wrap { max-height: calc(100vh - 126px); }
+  .hud-strip { padding: 6px 12px; }
+  .touch-controls { padding: 7px 12px 9px; }
+  .control-btn { min-height: 48px; }
+}
+
+@media (max-width: 420px) {
+  .touch-controls { display: grid; grid-template-columns: 1fr 1.35fr; align-items: stretch; }
+  .move-controls, .action-controls { width: 100%; min-width: 0; }
+  .control-btn, .control-btn.jump, .control-btn.fire { flex: 1 1 0; min-width: 0; padding-left: 7px; padding-right: 7px; font-size: .86rem; }
+}
+
+/* Keep game controls out of the way while the start/end form is open. */
+.hud-strip[hidden],
+.touch-controls[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 680px) and (orientation: portrait) {
+  /* Menu/result screens are normal mobile pages in portrait. The Phaser
+     canvas is removed from layout while a menu is open so it cannot leave
+     a large blue area or constrain the form to the game's 16:9 box. */
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    overscroll-behavior-y: auto;
+  }
+
+  .app-shell {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .hero { display: none; }
+
+  .game-card {
+    width: 100%;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+    background: var(--bg);
+  }
+
+  .game-wrap.menu-mode {
+    position: relative;
+    width: 100%;
+    height: auto !important;
+    min-height: 100svh;
+    aspect-ratio: auto;
+    overflow: visible;
+    background: var(--bg);
+  }
+
+  @supports (height: 100dvh) {
+    .game-wrap.menu-mode {
+      min-height: 100dvh;
+    }
+  }
+
+  .game-wrap.menu-mode #game {
+    display: none;
+  }
+
+  .game-wrap.menu-mode .overlay {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    min-height: 100svh;
+    padding:
+      max(14px, env(safe-area-inset-top))
+      12px
+      max(18px, env(safe-area-inset-bottom));
+    background: var(--bg);
+    backdrop-filter: none;
+    overflow: visible;
+  }
+
+  @supports (height: 100dvh) {
+    .game-wrap.menu-mode .overlay {
+      min-height: 100dvh;
+    }
+  }
+
+  .game-wrap.menu-mode .overlay.visible {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .game-wrap.menu-mode .overlay-card {
+    width: 100%;
+    max-width: 520px;
+    max-height: none;
+    overflow: visible;
+    margin: 0 auto;
+    padding: 20px 18px 22px;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 8px 26px rgba(30, 23, 20, .10);
+  }
+
+  .game-wrap.menu-mode .overlay-card h2 {
+    margin: 8px 0 10px;
+    font-size: 1.65rem;
+    line-height: 1.15;
+  }
+
+  .game-wrap.menu-mode .overlay-card p {
+    margin: 9px 0;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .game-wrap.menu-mode .badge {
+    font-size: .78rem;
+    padding: 6px 9px;
+  }
+
+  .game-wrap.menu-mode label {
+    margin: 14px 0 6px;
+    font-size: 1rem;
+  }
+
+  .game-wrap.menu-mode input {
+    min-height: 48px;
+    padding: 12px 13px;
+    font-size: 16px;
+  }
+
+  .game-wrap.menu-mode .primary-btn,
+  .game-wrap.menu-mode .secondary-btn {
+    min-height: 48px;
+    padding: 10px 13px;
+    font-size: 1rem;
+  }
+
+  .game-wrap.menu-mode .score-breakdown {
+    gap: 7px;
+    margin: 13px 0;
+    font-size: .95rem;
+  }
+
+  .game-wrap.menu-mode .message {
+    font-size: .9rem;
+  }
+
+  .leaderboard-panel {
+    margin: 12px;
+  }
+}
+
+/* Mobile gameplay tuning: maximize canvas area and keep controls compact. */
+@media (max-width: 680px) {
+  .hud-strip {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 2px;
+    padding: 6px 5px;
+    font-size: .68rem;
+    background: rgba(255,255,255,.94);
+  }
+
+  .hud-strip span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .touch-controls {
+    padding: 7px 8px 9px;
+    gap: 8px;
+  }
+
+  .control-btn,
+  .control-btn.jump,
+  .control-btn.fire {
+    min-width: 54px;
+    min-height: 44px;
+    border-radius: 12px;
+    font-size: .82rem;
+    padding: 5px 8px;
+  }
+
+  .control-btn.jump { min-width: 82px; }
+  .control-btn.fire { min-width: 78px; }
+
+  /* In portrait, give the live game substantially more vertical space. */
+  .game-wrap:not(.menu-mode) {
+    aspect-ratio: auto;
+    height: min(58svh, 520px);
+    min-height: 330px;
+  }
+}
+
+/* Phone landscape: turn the page into a near full-screen game surface. */
+@media (orientation: landscape) and (max-height: 600px) {
+  html, body {
+    width: 100%;
+    min-height: 100%;
+  }
+
+  .app-shell {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .hero { display: none; }
+
+  .game-card {
+    position: relative;
+    width: 100%;
+    height: 100svh;
+    min-height: 100svh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  @supports (height: 100dvh) {
+    .game-card {
+      height: 100dvh;
+      min-height: 100dvh;
+    }
+  }
+
+  .game-wrap:not(.menu-mode) {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+
+  /* HUD floats over the top of the canvas instead of consuming a row. */
+  .hud-strip:not([hidden]) {
+    position: absolute;
+    z-index: 30;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: calc(100% - 16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 4px 9px;
+    border: 0;
+    border-radius: 11px;
+    background: rgba(255,255,255,.78);
+    backdrop-filter: blur(4px);
+    font-size: .64rem;
+    pointer-events: none;
+  }
+
+  .hud-strip span {
+    flex: 0 0 auto;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  /* Controls float over the bottom corners, so no scrolling is needed. */
+  .touch-controls:not([hidden]) {
+    position: absolute;
+    z-index: 30;
+    left: 0;
+    right: 0;
+    bottom: max(5px, env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    padding: 0 9px;
+    border: 0;
+    background: transparent;
+    pointer-events: none;
+  }
+
+  .move-controls,
+  .action-controls {
+    gap: 6px;
+    pointer-events: auto;
+  }
+
+  .control-btn,
+  .control-btn.jump,
+  .control-btn.fire {
+    min-width: 48px;
+    min-height: 42px;
+    border-radius: 11px;
+    padding: 4px 7px;
+    font-size: .72rem;
+    background: rgba(255,255,255,.80);
+    box-shadow: 0 2px 0 rgba(80,70,65,.35);
+    backdrop-filter: blur(3px);
+    opacity: .88;
+  }
+
+  .control-btn.jump { min-width: 70px; }
+  .control-btn.fire { min-width: 68px; }
+
+  .leaderboard-panel { display: none; }
+}
+
+
+@media (max-width: 680px) {
+  .joystick-shell { min-width: 104px; min-height: 104px; }
+  .joystick-base { width: 94px; height: 94px; }
+  .joystick-knob { width: 40px; height: 40px; margin-left: -20px; margin-top: -20px; }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .joystick-shell { min-width: 96px; min-height: 96px; }
+  .joystick-base { width: 88px; height: 88px; box-shadow: inset 0 5px 12px rgba(255,255,255,.75), inset 0 -6px 12px rgba(150,140,130,.12), 0 3px 0 #d5cec8; }
+  .joystick-knob { width: 36px; height: 36px; margin-left: -18px; margin-top: -18px; }
+}
+
+
+/* Authoritative mobile menu/result layout.
+   When a Start or Game Over screen is visible, remove the game canvas and
+   render the form as the page itself in BOTH portrait and landscape. */
+@media (max-width: 900px), (max-height: 600px) {
+  body.menu-open {
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    background: var(--bg);
+  }
+
+  body.menu-open .app-shell {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body.menu-open .hero,
+  body.menu-open .hud-strip,
+  body.menu-open .touch-controls {
+    display: none !important;
+  }
+
+  body.menu-open .game-card {
+    position: relative;
+    width: 100%;
+    height: auto !important;
+    min-height: 100svh !important;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+    background: var(--bg);
+  }
+
+  @supports (height: 100dvh) {
+    body.menu-open .game-card {
+      min-height: 100dvh !important;
+    }
+  }
+
+  body.menu-open .game-wrap.menu-mode {
+    position: relative;
+    width: 100%;
+    height: auto !important;
+    min-height: 100svh !important;
+    max-height: none !important;
+    aspect-ratio: auto !important;
+    overflow: visible;
+    background: var(--bg);
+  }
+
+  body.menu-open .game-wrap.menu-mode #game {
+    display: none !important;
+  }
+
+  body.menu-open .game-wrap.menu-mode .overlay {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    min-height: 100svh;
+    padding:
+      max(12px, env(safe-area-inset-top))
+      max(12px, env(safe-area-inset-right))
+      max(18px, env(safe-area-inset-bottom))
+      max(12px, env(safe-area-inset-left));
+    background: var(--bg);
+    backdrop-filter: none;
+    overflow: visible;
+  }
+
+  body.menu-open .game-wrap.menu-mode .overlay.visible {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  body.menu-open .game-wrap.menu-mode .overlay-card {
+    width: min(100%, 560px);
+    max-width: 560px;
+    max-height: none;
+    margin: 0 auto;
+    padding: 18px;
+    overflow: visible;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(30, 23, 20, .08);
+  }
+
+  body.menu-open .game-wrap.menu-mode .overlay-card h2 {
+    margin: 8px 0 10px;
+    font-size: clamp(1.45rem, 5vw, 1.9rem);
+    line-height: 1.12;
+  }
+
+  body.menu-open .game-wrap.menu-mode .overlay-card p {
+    margin: 9px 0;
+    font-size: .95rem;
+    line-height: 1.42;
+  }
+
+  body.menu-open .game-wrap.menu-mode .badge {
+    font-size: .76rem;
+    padding: 6px 9px;
+  }
+
+  body.menu-open .game-wrap.menu-mode .primary-btn,
+  body.menu-open .game-wrap.menu-mode .secondary-btn {
+    min-height: 46px;
+    font-size: 1rem;
+  }
+
+  body.menu-open .game-wrap.menu-mode .score-breakdown {
+    margin: 12px 0;
+    gap: 6px;
+    font-size: .95rem;
+  }
+}
+
+/* Compact landscape-phone version: normal page scrolling, no game behind it. */
+@media (orientation: landscape) and (max-height: 600px) {
+  body.menu-open .game-wrap.menu-mode .overlay {
+    min-height: 100dvh;
+    padding-top: 8px;
+    padding-bottom: 12px;
+  }
+
+  body.menu-open .game-wrap.menu-mode .overlay-card {
+    width: min(92vw, 620px);
+    max-width: 620px;
+    padding: 12px 16px 14px;
+    border-radius: 14px;
+  }
+
+  body.menu-open .game-wrap.menu-mode .overlay-card h2 {
+    margin: 6px 0 8px;
+    font-size: 1.45rem;
+  }
+
+  body.menu-open .game-wrap.menu-mode .badge {
+    font-size: .7rem;
+    padding: 5px 8px;
+  }
+
+  body.menu-open .game-wrap.menu-mode .primary-btn,
+  body.menu-open .game-wrap.menu-mode .secondary-btn {
+    min-height: 42px;
+    padding: 8px 12px;
+    font-size: .95rem;
+  }
+
+  body.menu-open .game-wrap.menu-mode .score-breakdown {
+    margin: 9px 0;
+    gap: 4px;
+    font-size: .9rem;
+  }
+
+  body.menu-open .game-wrap.menu-mode .overlay-card p {
+    font-size: .88rem;
+    line-height: 1.35;
+  }
+}
